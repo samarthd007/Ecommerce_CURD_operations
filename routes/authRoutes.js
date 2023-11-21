@@ -1,11 +1,11 @@
-const { register, login, logout } = require('../Controller/authController')
+const express = require('express')
+const router = express.Router()
 
-const express=require('express')
-const router=express.Router()
+const { register, login, logout } = require('../controllers/authController')
+const { singleUpload } = require('../middleware/multer')
 
-router.post('/register',register)
-router.post('/login',login)
-router.post('/logout',logout)
+router.post('/register', singleUpload, register)
+router.post('/login', login)
+router.get('/logout', logout)
 
-module.exports=router;
-
+module.exports = router

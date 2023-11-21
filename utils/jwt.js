@@ -1,34 +1,29 @@
-const jwt=require('jsonwebtoken')
-require('dotenv').config()
+const jwt = require('jsonwebtoken')
 
-const createJwt=({payload})=>{
-    const token =jwt.sign(payload,process.env.JWT_SECRET,{
-        expiresIn:process.env.JWT_LIFETIME,
+const createJWT = ({ payload }) => {
+    const token = jwt.sign(payload, process.env.JWT_SECRET, {
+        expiresIn: '1d',
     })
-    return token 
+    return token
 }
 
+const isTokenValid = ({ token }) => jwt.verify(token, process.env.JWT_SECRET)
 
-const isTokenValid=({token})=>{
-    return jwt.verify(token,process.env.JWT_SECRET);
-} 
+const attachCookiesToResponse = ({ res, user }) => {
+    const token = createJWT({ payload: user })
 
-const attachCookiesToResponse=({res,user})=>{
-    const token =createJwt({payload:user});
+    const oneDay = 1000 * 60 * 60 * 24
 
-    const oneday=1000*60*60*24;
-
-    res.cookie('token',token,{
-        httpOnly:true,
-        expires:new Date(Date.now()+oneday),
-        secure:process.env.NODE_ENV==='production',
-        signed:true,
-    });
-
+    res.cookie('token', token, {
+        httpOnly: true,
+        expires: new Date(Date.now() + oneDay),
+        secure: process.env.NODE_ENV === 'production',
+        signed: true,
+    })
 }
 
-module.exports={
+module.exports = {
+    createJWT,
     isTokenValid,
-    createJwt,
-    attachCookiesToResponse
-};
+    attachCookiesToResponse,
+}
