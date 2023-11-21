@@ -1,22 +1,40 @@
-const express=require('express')
-const router=express.Router()
-const { getAllUsers,
-    getOneSingleUser,
+const express = require('express')
+const router = express.Router()
+const {
+    authenticateUser,
+    authorizePermissions,
+} = require('../middleware/authentication')
+const {
+    getAllUsers,
+    getSingleUser,
+    showCurrentUser,
     updateUser,
-    updateUserPasscode,
-    showCurrentUser}=require('../Controller/userController');
-const { authenticateUser, authorizePermissions } = require('../middleware/authentication');
+    updateUserPassword,
+    updatePicture,
+    forgetPassword,
+    resetPassword,
+} = require('../controllers/userController')
+const { singleUpload } = require('../middleware/multer')
 
-router.route('/updateUser').patch(authenticateUser,updateUser)
+router
+    .route('/')
+    .get(authenticateUser, authorizePermissions('admin'), getAllUsers)
 
+router.route('/showMe').get(authenticateUser, showCurrentUser)
+router.route('/updateUser').patch(authenticateUser, updateUser)
+router.route('/updateUserPassword').patch(authenticateUser, updateUserPassword)
 
-router.route('/').get(authenticateUser,authorizePermissions('admin','user'),getAllUsers);
+router
+    .route('/updatePicture')
+    .patch(authenticateUser, singleUpload, updatePicture)
 
-router.route('/showMe').get(authenticateUser,showCurrentUser)
+router
+    .route('/:id')
+    .get(authenticateUser, authorizePermissions('admin'), getSingleUser)
 
-router.route('/:id').get(authenticateUser,getOneSingleUser);
+router
+    .route('/forgetPassword')
+    .post(authenticateUser, forgetPassword)
+    .patch(authenticateUser, resetPassword)
 
-router.route('/updatePasscode').patch(authenticateUser,updateUserPasscode)
-
-
-module.exports=router
+module.exports = router

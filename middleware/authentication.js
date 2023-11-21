@@ -1,35 +1,34 @@
-const CustomError=require('../errors')
-const { isTokenValid } = require('../utils/jwt')
+const CustomError = require('../errors');
+const { isTokenValid } = require('../utils');
 
-const authenticateUser=async (req,res,next)=>{
-    const token =req.signedCookies.token
+const authenticateUser = async (req, res, next) => {
+  const token = req.signedCookies.token;
 
-    if(!token){
-        throw new CustomError.UnauthenticatedError('Login or register is required')
+  if (!token) {
+    throw new CustomError.UnauthenticatedError('Authentication Invalid');
+  }
+
+  try {
+    const { name, userId, role } = isTokenValid({ token });
+    req.user = { name, userId, role };
+    next();
+  } catch (error) {
+    throw new CustomError.UnauthenticatedError('Authentication Invalid');
+  }
+};
+
+const authorizePermissions = (...roles) => {
+  return (req, res, next) => {
+    if (!roles.includes(req.user.role)) {
+      throw new CustomError.UnauthorizedError(
+        'Unauthorized to access this route'
+      );
     }
+    next();
+  };
+};
 
-    try {
-        const {name,userID,role}=isTokenValid({token});
-        req.user={name,userID,role}
-        next();
-    } catch (error) {
-        throw new CustomError.UnauthenticatedError('Login or register is required');
-    }
-    
-}
-
-const authorizePermissions=(...roles)=>{
-
-    return(req,res,next)=>{
-        if(!roles.includes(req.user.role)){
-            throw new CustomError.UnauthorizeError('UnAuthorised access to this route')
-        }
-        next();
-    }
-
-}
-
-module.exports={
-    authenticateUser,
-    authorizePermissions
-}
+module.exports = {
+  authenticateUser,
+  authorizePermissions,
+};

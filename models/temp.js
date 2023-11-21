@@ -1,8 +1,3 @@
-import { MongoClient } from 'mongodb';
-import {
-  ObjectId
-} from 'mongodb';
-
 /*
  * Requires the MongoDB Node.js Driver
  * https://mongodb.github.io/node-mongodb-native
@@ -10,27 +5,32 @@ import {
 
 const agg = [
   {
-    '$match': {
-      'product': new ObjectId('64c0d28f1c1bfbd71f9c5122')
-    }
-  }, {
-    '$group': {
-      '_id': null, 
-      'averageRating': {
-        '$avg': '$rating'
-      }, 
-      'numOfReviews': {
-        '$sum': 1
-      }
-    }
-  }
+    $match: {
+      product: new ObjectId('615c873ad584c748cc86e5bb'),
+    },
+  },
+  {
+    $group: {
+      _id: null,
+      averageRating: {
+        $avg: '$rating',
+      },
+      numberOfReviews: {
+        $sum: 1,
+      },
+    },
+  },
 ];
 
-const client = await MongoClient.connect(
+MongoClient.connect(
   '',
-  { useNewUrlParser: true, useUnifiedTopology: true }
+  { useNewUrlParser: true, useUnifiedTopology: true },
+  function (connectErr, client) {
+    assert.equal(null, connectErr);
+    const coll = client.db('').collection('');
+    coll.aggregate(agg, (cmdErr, result) => {
+      assert.equal(null, cmdErr);
+    });
+    client.close();
+  }
 );
-const coll = client.db('E-Commerce').collection('reviews');
-const cursor = coll.aggregate(agg);
-const result = await cursor.toArray();
-await client.close();

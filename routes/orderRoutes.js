@@ -1,13 +1,36 @@
-const express=require('express')
-const router=express.Router()
-const { authenticateUser, authorizePermissions } = require('../middleware/authentication');
-const { getAllOrder, getCurrentUserOrder, getoneOrder, createOrder, updateOrder } = require('../Controller/orderController');
+const express = require('express')
+const router = express.Router()
+const {
+    authenticateUser,
+    authorizePermissions,
+} = require('../middleware/authentication')
 
-router.route('/').post(authenticateUser,createOrder).get(authenticateUser,authorizePermissions('admin'),getAllOrder)
+const {
+    getAllOrders,
+    getSingleOrder,
+    getCurrentUserOrders,
+    createOrder,
+    updateOrder,
+    processOrder,
+    processPayment,
+} = require('../controllers/orderController')
 
-router.route('/showallmyorders').get(authenticateUser,getCurrentUserOrder)
+router
+    .route('/')
+    .post(authenticateUser, createOrder)
+    .get(authenticateUser, authorizePermissions('admin'), getAllOrders)
 
-router.route('/:id').get(authenticateUser,getoneOrder).patch(authenticateUser,updateOrder);
+router.route('/showAllMyOrders').get(authenticateUser, getCurrentUserOrders)
 
+router
+    .route('/singleorder/:id')
+    .get(authenticateUser, getSingleOrder)
+    .patch(authenticateUser, updateOrder)
 
-module.exports=router
+router
+    .route('/orderstatus/:id')
+    .put(authenticateUser, authorizePermissions('admin'), processOrder)
+
+router.route('/payment').post(authenticateUser, processPayment)
+
+module.exports = router
