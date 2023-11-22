@@ -42,7 +42,7 @@ router
 router
     .route('/:id')
     .get(getSingleProduct)
-    .patch([authenticateUser, authorizePermissions('admin')], updateProduct)
+    .put([authenticateUser, authorizePermissions('admin')], updateProduct)
     .delete([authenticateUser, authorizePermissions('admin')], deleteProduct)
 
 router.route('/:id/reviews').get(getSingleProductReviews)

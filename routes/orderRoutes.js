@@ -25,7 +25,7 @@ router.route('/showAllMyOrders').get(authenticateUser, getCurrentUserOrders)
 router
     .route('/singleorder/:id')
     .get(authenticateUser, getSingleOrder)
-    .patch(authenticateUser, updateOrder)
+    .put(authenticateUser, updateOrder)
 
 router
     .route('/orderstatus/:id')
