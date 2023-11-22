@@ -21,12 +21,12 @@ router
     .get(authenticateUser, authorizePermissions('admin'), getAllUsers)
 
 router.route('/showMe').get(authenticateUser, showCurrentUser)
-router.route('/updateUser').patch(authenticateUser, updateUser)
-router.route('/updateUserPassword').patch(authenticateUser, updateUserPassword)
+router.route('/updateUser').put(authenticateUser, updateUser)
+router.route('/updateUserPassword').put(authenticateUser, updateUserPassword)
 
 router
     .route('/updatePicture')
-    .patch(authenticateUser, singleUpload, updatePicture)
+    .put(authenticateUser, singleUpload, updatePicture)
 
 router
     .route('/:id')
@@ -35,6 +35,6 @@ router
 router
     .route('/forgetPassword')
     .post(authenticateUser, forgetPassword)
-    .patch(authenticateUser, resetPassword)
+    .put(authenticateUser, resetPassword)
 
 module.exports = router
