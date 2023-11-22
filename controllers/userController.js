@@ -27,7 +27,12 @@ const getSingleUser = async (req, res) => {
 }
 
 const showCurrentUser = async (req, res) => {
-    res.status(StatusCodes.OK).json({ user: req.user, success: true })
+    const avatar = await User.findById({ _id: req.user.userId })
+    res.status(StatusCodes.OK).json({
+        user: req.user,
+        success: true,
+        avatar: avatar.avatar,
+    })
 }
 // update user with user.save()
 const updateUser = async (req, res) => {
