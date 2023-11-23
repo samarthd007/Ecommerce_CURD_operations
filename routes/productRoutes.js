@@ -15,6 +15,7 @@ const {
     addProductImages,
     deleteImage,
     getAdminProduct,
+    getAllProductsWithCategory,
 } = require('../controllers/productController')
 
 const { getSingleProductReviews } = require('../controllers/reviewController')
@@ -34,6 +35,8 @@ router
     )
 
 router.route('/all').get(getAllProducts)
+
+router.route('/all/byfilter').get(getAllProductsWithCategory)
 
 router
     .route('/uploadImage')
