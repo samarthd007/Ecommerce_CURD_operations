@@ -28,7 +28,15 @@ const createProduct = async (req, res) => {
     })
     res.status(StatusCodes.CREATED).json({ product, success: true })
 }
+
 const getAllProducts = async (req, res) => {
+    const products = await Product.find({})
+    if (!products) {
+        throw new CustomError.NotFoundError('No  products found')
+    }
+    res.status(StatusCodes.OK).json({ products, success: true })
+}
+const getAllProductsWithCategory = async (req, res) => {
     const { keyword, category } = req.query
 
     const products = await Product.find({
@@ -229,4 +237,5 @@ module.exports = {
     addProductImages,
     deleteImage,
     getAdminProduct,
+    getAllProductsWithCategory,
 }
