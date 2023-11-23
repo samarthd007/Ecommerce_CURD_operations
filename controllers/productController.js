@@ -39,23 +39,43 @@ const getAllProducts = async (req, res) => {
 const getAllProductsWithCategory = async (req, res) => {
     const { keyword, category } = req.query
 
-    const products = await Product.find({
-        name: {
-            $regex: keyword ? keyword : '',
-            $options: 'i',
-        },
-        category: category ? category : undefined,
-    })
+    if (category) {
+        const products = await Product.find({
+            name: {
+                $regex: keyword ? keyword : '',
+                $options: 'i',
+            },
+            category: category,
+        })
 
-    if (!products) {
-        throw new CustomError.NotFoundError('No  products found')
+        if (!products) {
+            throw new CustomError.NotFoundError('No  products found')
+        }
+
+        res.status(StatusCodes.OK).json({
+            products,
+            count: products.length,
+            success: true,
+        })
     }
+    if (!category) {
+        const products = await Product.find({
+            name: {
+                $regex: keyword ? keyword : '',
+                $options: 'i',
+            },
+        })
 
-    res.status(StatusCodes.OK).json({
-        products,
-        count: products.length,
-        success: true,
-    })
+        if (!products) {
+            throw new CustomError.NotFoundError('No  products found')
+        }
+
+        res.status(StatusCodes.OK).json({
+            products,
+            count: products.length,
+            success: true,
+        })
+    }
 }
 
 const getAdminProduct = async (req, res) => {
