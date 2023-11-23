@@ -13,12 +13,15 @@ const {
     updatePicture,
     forgetPassword,
     resetPassword,
+    getUserInfo,
 } = require('../controllers/userController')
 const { singleUpload } = require('../middleware/multer')
 
 router
     .route('/')
     .get(authenticateUser, authorizePermissions('admin'), getAllUsers)
+
+router.route('/userinfo').get(authenticateUser, getUserInfo)
 
 router.route('/showMe').get(authenticateUser, showCurrentUser)
 router.route('/updateUser').put(authenticateUser, updateUser)

@@ -15,6 +15,20 @@ const getAllUsers = async (req, res) => {
     res.status(StatusCodes.OK).json({ users, success: true })
 }
 
+const getUserInfo = async (req, res) => {
+    const user = await User.findById({ _id: req.user.userId }).select(
+        '-password'
+    )
+
+    if (!user) {
+        throw new CustomError.NotFoundError(
+            `No user with id : ${req.user.userId}`
+        )
+    }
+
+    res.status(StatusCodes.OK).json({ user, success: true })
+}
+
 const getSingleUser = async (req, res) => {
     const user = await User.findOne({ _id: req.params.id }).select('-password')
     if (!user) {
@@ -174,6 +188,7 @@ module.exports = {
     updatePicture,
     forgetPassword,
     resetPassword,
+    getUserInfo,
 }
 
 // update user with findOneAndUpdate
