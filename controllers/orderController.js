@@ -26,7 +26,8 @@ const createOrder = async (req, res) => {
         address,
         paymentMethod,
         clientSecret,
-        paymentInfo: paymentInfo,
+        paymentInfo,
+        paymentStatusInfo,
     } = req.body
 
     if (!orderItems || orderItems.length < 1) {
@@ -78,6 +79,7 @@ const createOrder = async (req, res) => {
         paymentMethod,
         clientSecret,
         paymentInfo,
+        paymentStatusInfo,
         user: req.user.userId,
     })
 

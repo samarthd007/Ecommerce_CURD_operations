@@ -53,12 +53,15 @@ const OrderSchema = mongoose.Schema(
         },
         paymentMethod: {
             type: String,
-            enum: ['COD', 'ONLINE'],
+
             default: 'COD',
         },
         paymentInfo: {
             id: String,
-            status: String,
+        },
+        paymentStatusInfo: {
+            type: String,
+            default: 'pending',
         },
         address: {
             type: String,
