@@ -56,6 +56,10 @@ const OrderSchema = mongoose.Schema(
             enum: ['COD', 'ONLINE'],
             default: 'COD',
         },
+        paymentInfo: {
+            id: String,
+            status: String,
+        },
         address: {
             type: String,
             required: true,
