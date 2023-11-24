@@ -96,7 +96,7 @@ const createOrder = async (req, res) => {
     })
 }
 const getAllOrders = async (req, res) => {
-    const orders = await Order.find()
+    const orders = await Order.find({})
     res.status(StatusCodes.OK).json({
         success: true,
         orders,
