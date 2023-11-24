@@ -26,7 +26,7 @@ const createOrder = async (req, res) => {
         address,
         paymentMethod,
         clientSecret,
-        paymentInfo,
+        paymentInfo: paymentInfo,
     } = req.body
 
     if (!orderItems || orderItems.length < 1) {
