@@ -151,13 +151,13 @@ const processOrder = async (req, res) => {
     } else if (order.orderStatus === 'shipped') {
         order.orderStatus = 'delivered'
     } else {
-        return res.status(403).send('Invalid status transition')
+        throw new CustomError.BadRequestError(`Order already delivered`)
     }
     await order.save()
 
     res.status(StatusCodes.OK).json({
         order,
-        message: 'order delivered',
+        message: `Transition changed to ${order.orderStatus}`,
         success: true,
     })
 }
