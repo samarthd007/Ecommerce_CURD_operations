@@ -35,9 +35,6 @@ router
     .route('/:id')
     .get(authenticateUser, authorizePermissions('admin'), getSingleUser)
 
-router
-    .route('/forgetPassword')
-    .post(authenticateUser, forgetPassword)
-    .put(authenticateUser, resetPassword)
+router.route('/forgetPassword').post(forgetPassword).put(resetPassword)
 
 module.exports = router
